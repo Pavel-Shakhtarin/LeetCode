@@ -7,7 +7,10 @@ fun main(args: Array<String>) {
 //    merge(intArrayOf(1), 1, intArrayOf(), 0)
 //    merge(intArrayOf(2, 0), 1, intArrayOf(1), 1)
 //    removeInPlace(intArrayOf(3, 2, 2, 3), 3)
-    containsDouble(intArrayOf(3, 1, 7, 11))
+    println(validMountainArray(intArrayOf(0, 1, 2, 4, 2, 1)))
+    println(validMountainArray(intArrayOf(3, 5, 5)))
+    println(validMountainArray(intArrayOf(2, 0, 2)))
+    println(validMountainArray(intArrayOf(0,1,2,3,4,5,6,7,8,9)))
 }
 
 fun findMaxConsecutiveOnes(nums: IntArray): Int {
@@ -137,4 +140,29 @@ fun containsDouble(arr: IntArray): Boolean {
         set += it
     }
     return false
+}
+
+fun validMountainArray(arr: IntArray): Boolean {
+    if (arr.size < 3) return false
+    var headC = 0
+    var tailC = arr.size - 1
+    var prevH = arr[headC] - 1
+    var prevT = arr[tailC] - 1
+    while (tailC >= 0) {
+        val tailE = arr[tailC]
+        if (tailE > prevT) {
+            prevT = tailE
+            tailC--
+        } else if (tailE == prevT) return false
+        else break
+    }
+    if (tailC < 0 || tailC + 1 == arr.size - 1) return false
+    while (headC <= tailC) {
+        val headE = arr[headC]
+        if (headE > prevH) {
+            prevH = headE
+            headC++
+        } else return false
+    }
+    return true
 }
