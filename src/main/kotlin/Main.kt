@@ -2,10 +2,12 @@ import kotlin.math.abs
 import kotlin.math.max
 
 fun main(args: Array<String>) {
-    merge(intArrayOf(1, 2, 3, 0, 0, 0), 3, intArrayOf(2, 5, 6), 3)
-    merge(intArrayOf(0), 0, intArrayOf(1), 1)
-    merge(intArrayOf(1), 1, intArrayOf(), 0)
-    merge(intArrayOf(2, 0), 1, intArrayOf(1), 1)
+//    merge(intArrayOf(1, 2, 3, 0, 0, 0), 3, intArrayOf(2, 5, 6), 3)
+//    merge(intArrayOf(0), 0, intArrayOf(1), 1)
+//    merge(intArrayOf(1), 1, intArrayOf(), 0)
+//    merge(intArrayOf(2, 0), 1, intArrayOf(1), 1)
+//    removeInPlace(intArrayOf(3, 2, 2, 3), 3)
+    containsDouble(intArrayOf(3, 1, 7, 11))
 }
 
 fun findMaxConsecutiveOnes(nums: IntArray): Int {
@@ -81,11 +83,9 @@ fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int): Unit {
         val num2El = if (nums2.isNotEmpty()) nums2[sPointer] else null
         if (num1El >= num2El) {
             nums1[mainPointer] = num1El!!
-            if (num2El < num1El) nums1[fPointer] = num2El ?: num1El
             fPointer--
         } else {
             nums1[mainPointer] = num2El!!
-            if (num1El < num2El) nums1[sPointer] = num1El ?: num2El
             sPointer--
         }
         mainPointer--
@@ -96,10 +96,45 @@ fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int): Unit {
     println()
 }
 
+fun removeInPlace(nums: IntArray, value: Int): Int {
+    var headP = 0
+    var tailP = nums.size - 1
+    var counter = 0
+    while (tailP > headP) {
+        val head = nums[headP]
+        val tail = nums[tailP]
+        if (head == value && tail != value) {
+            nums[headP] = tail
+            tailP--
+            counter++
+        } else if (head != value && tail == value) {
+            tailP--
+        } else if (head != value) {
+            headP++
+            counter++
+        } else {
+            tailP--
+        }
+    }
+    nums.forEach { print("$it ") }
+    println()
+    println("$counter")
+    return counter
+}
+
 private operator fun Int?.compareTo(nullableNumber: Int?): Int {
     return if (this != null && nullableNumber != null) {
         if (this == nullableNumber) 0 else if (max(this, nullableNumber) == this) 1 else -1
     } else if (this == null && nullableNumber != null) -1
     else if (this != null) 1
     else throw Error("Both numbers are null")
+}
+
+fun containsDouble(arr: IntArray): Boolean {
+    val set = mutableSetOf<Int>()
+    arr.forEach {
+        if (set.contains(it * 2) || (it % 2 == 0 && set.contains(it / 2))) return true
+        set += it
+    }
+    return false
 }
